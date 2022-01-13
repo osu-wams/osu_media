@@ -1,15 +1,15 @@
 {
-  "name": "$vendor_name$/$package_name$",
-  "description": "$description$",
-  "minimum-stability": "$stability$",
-  "license": "$license$",
+  "name": "osu-wams/osu_media",
+  "description": "Drupal module for OSU Media",
+  "minimum-stability": "stable",
+  "type": "drupal-custom-module",
+  "license": "GPL-2.0-or-later",
   "authors": [
     {
-      "name": "$author$",
-      "email": "$email$"
+      "name": "Matthew Brabham",
+      "email": "matthew.brabham@oregonstate.edu"
     }
   ],
   "require": {
-    $END$
   }
 }
