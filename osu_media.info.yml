@@ -1,0 +1,7 @@
+name: OSU Media
+type: module
+description: Media related configs and settings.
+package: OSU
+core_version_requirement: ^8 || ^9
+dependencies:
+  - core:media

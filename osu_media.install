@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the OSU Media module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function osu_media_install() {
+  \Drupal::messenger()->addStatus(__FUNCTION__);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function osu_media_uninstall() {
+  \Drupal::messenger()->addStatus(__FUNCTION__);
+}
+
