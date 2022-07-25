@@ -15,10 +15,12 @@ function osu_media_post_update_remove_card_caption_display(&$sandbox) {
   $media_card_caption_image_display = \Drupal::service('config.factory')
     ->getEditable('core.entity_view_display.media.image.media_card_caption');
   $media_card_caption_image_display->delete();
+
   /** @var \Drupal\Core\Config\Config $media_card_caption_remote_video_display */
   $media_card_caption_remote_video_display = \Drupal::service('config.factory')
     ->getEditable('core.entity_view_display.media.remote_video.media_card_caption');
   $media_card_caption_remote_video_display->delete();
+
   /** @var \Drupal\Core\Config\Config $media_card_caption */
   $media_card_caption = \Drupal::service('config.factory')
     ->getEditable('core.entity_view_mode.media.media_card_caption');
@@ -35,6 +37,7 @@ function osu_media_post_update_add_frameless_embed_option(&$sandbox) {
     ->getModule('osu_media')
     ->getPath();
   $config_path = realpath($osu_media_module_path . '/config/install');
+
   /** @var \Drupal\Core\Config\StorageInterface $config_storage */
   $config_storage = \Drupal::service('config.storage');
   $config_source = new FileStorage($config_path);
