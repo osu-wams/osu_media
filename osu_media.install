@@ -4,6 +4,22 @@ use Drupal\Core\Config\FileStorage;
 use Drupal\image\Entity\ImageStyle;
 
 /**
+ * Import missing view modes.
+ */
+function osu_media_update_9002(&$sandbox) {
+  /** @var string $osu_media_module_path */
+  $osu_media_module_path = \Drupal::service('module_handler')
+    ->getModule('osu_media')
+    ->getPath();
+  $config_path = realpath($osu_media_module_path . '/config/install');
+  $config_source = new FileStorage($config_path);
+  /** @var \Drupal\Core\Config\StorageInterface $config_storage */
+  $config_storage = \Drupal::service('config.storage');
+  $config_storage->write('core.entity_view_mode.media.400x375', $config_source->read('core.entity_view_mode.media.400x375'));
+  $config_storage->write('core.entity_view_mode.media.1400x900', $config_source->read('core.entity_view_mode.media.1400x900'));
+}
+
+/**
  * Import new image styles.
  */
 function osu_media_update_9001(&$sandbox) {
