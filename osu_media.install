@@ -1,0 +1,28 @@
+<?php
+
+use Drupal\Core\Config\FileStorage;
+use Drupal\image\Entity\ImageStyle;
+
+/**
+ * Import new image styles.
+ */
+function osu_media_update_9001(&$sandbox) {
+  /** @var string $osu_media_module_path */
+  $osu_media_module_path = \Drupal::service('module_handler')
+    ->getModule('osu_media')
+    ->getPath();
+  $config_path = realpath($osu_media_module_path . '/config/install');
+  $config_source = new FileStorage($config_path);
+  // Create new image styles.
+  if (is_null(ImageStyle::load('400x375'))) {
+    ImageStyle::create($config_source->read(('image.style.400x375')))->save();
+  }
+  if (is_null(ImageStyle::load('1400x900'))) {
+    ImageStyle::create($config_source->read(('image.style.1400x900')))->save();
+  }
+  /** @var \Drupal\Core\Config\StorageInterface $config_storage */
+  $config_storage = \Drupal::service('config.storage');
+  // Create new View modes for media.
+  $config_storage->write('core.entity_view_display.media.image.400x375', $config_source->read('core.entity_view_display.media.image.400x375'));
+  $config_storage->write('core.entity_view_display.media.image.1400x900', $config_source->read('core.entity_view_display.media.image.1400x900'));
+}

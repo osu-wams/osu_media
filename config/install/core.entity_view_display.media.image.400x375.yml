@@ -2,9 +2,9 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.media.media_card
+    - core.entity_view_mode.media.400x375
     - field.field.media.image.field_media_image
-    - image.style.fluid_webp
+    - image.style.400x375
     - media.type.image
   module:
     - image
@@ -13,17 +13,17 @@ third_party_settings:
   layout_builder:
     enabled: false
     allow_custom: false
-id: media.image.media_card
+id: media.image.400x375
 targetEntityType: media
 bundle: image
-mode: media_card
+mode: 400x375
 content:
   field_media_image:
     type: image
     label: visually_hidden
     settings:
       image_link: ''
-      image_style: fluid_webp
+      image_style: 400x375
       image_loading:
         attribute: lazy
     third_party_settings: {  }
