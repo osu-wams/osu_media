@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: {  }
+name: x_large
+label: 'X-Large (600×600)'
+effects:
+  3b296c73-195a-40eb-9502-c26f6415fa40:
+    uuid: 3b296c73-195a-40eb-9502-c26f6415fa40
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 600
+      height: 600
+      anchor: center-center
