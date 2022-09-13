@@ -4,6 +4,20 @@ use Drupal\Core\Config\FileStorage;
 use Drupal\image\Entity\ImageStyle;
 
 /**
+ * Add xl image style.
+ */
+function osu_media_update_9003(&$sandbox) {
+  $osu_media_module_path = \Drupal::service('module_handler')
+    ->getModule('osu_media')
+    ->getPath();
+  $config_path = realpath($osu_media_module_path . '/config/install');
+  $config_source = new FileStorage($config_path);
+  if (is_null(ImageStyle::load('x_large'))) {
+    ImageStyle::create($config_source->read(('image.style.x_large')))->save();
+  }
+}
+
+/**
  * Import missing view modes.
  */
 function osu_media_update_9002(&$sandbox) {
