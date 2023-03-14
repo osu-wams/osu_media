@@ -3,6 +3,26 @@
 use Drupal\Core\Config\FileStorage;
 use Drupal\image\Entity\ImageStyle;
 
+
+/**
+ * Add image styles for Meta-tag Facebook and Twitter cards.
+ */
+function osu_media_update_9004(&$sandbox) {
+  $osu_media_module_path = \Drupal::service('module_handler')
+    ->getModule('osu_media')
+    ->getPath();
+  $config_path = realpath($osu_media_module_path . '/config/install');
+  $config_source = new FileStorage($config_path);
+  if (is_null(ImageStyle::load('facebook_1200x'))) {
+    ImageStyle::create($config_source->read(('image.style.facebook_1200x')))
+      ->save();
+  }
+  if (is_null(ImageStyle::load('twitter_300x157'))) {
+    ImageStyle::create($config_source->read(('image.style.twitter_300x157')))
+      ->save();
+  }
+}
+
 /**
  * Add xl image style.
  */
