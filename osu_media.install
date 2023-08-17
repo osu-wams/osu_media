@@ -5,6 +5,20 @@ use Drupal\image\Entity\ImageStyle;
 
 
 /**
+ * Add new Media View modes.
+ */
+function osu_media_update_9005(&$sandbox) {
+  $osu_media_module_config_path = osu_media_get_install_location();
+  $config_source = new FileStorage($osu_media_module_config_path);
+
+  /** @var \Drupal\Core\Config\StorageInterface $config_storage */
+  $config_storage = \Drupal::service('config.storage');
+
+  $config_storage->write('core.entity_view_mode.media.osu_orange_bottom', $config_source->read('core.entity_view_mode.media.osu_orange_bottom'));
+  $config_storage->write('core.entity_view_display.media.image.osu_orange_bottom', $config_source->read('core.entity_view_display.media.image.osu_orange_bottom'));
+}
+
+/**
  * Add image styles for Meta-tag Facebook and Twitter cards.
  */
 function osu_media_update_9004(&$sandbox) {
@@ -75,4 +89,18 @@ function osu_media_update_9001(&$sandbox) {
   // Create new View modes for media.
   $config_storage->write('core.entity_view_display.media.image.400x375', $config_source->read('core.entity_view_display.media.image.400x375'));
   $config_storage->write('core.entity_view_display.media.image.1400x900', $config_source->read('core.entity_view_display.media.image.1400x900'));
+}
+
+/**
+ * Get the configuration path for this module.
+ *
+ * @return false|string
+ *   The path to the installation folder or false.
+ */
+function osu_media_get_install_location() {
+  /** @var string $osu_media_module_path */
+  $osu_media_module_path = \Drupal::service('module_handler')
+    ->getModule('osu_media')
+    ->getPath();
+  return realpath($osu_media_module_path . '/config/install');
 }
