@@ -5,6 +5,8 @@
  * Primary module hooks for OSU Media module.
  */
 
+use Drupal\osu_media\Entity\Bundle\MediaImage;
+
 /**
  * Implements hook_entity_bundle_info_alter().
  */
@@ -19,6 +21,6 @@ function osu_media_entity_bundle_info_alter(array &$bundles): void {
    * https://www.drupal.org/project/drupal/issues/3088168
    */
   if (isset($bundles['media']['image'])) {
-    $bundles['media']['image']['class'] = \Drupal\osu_media\Entity\Bundle\MediaImage::class;
+    $bundles['media']['image']['class'] = MediaImage::class;
   }
 }
