@@ -1,8 +1,59 @@
 <?php
 
 use Drupal\Core\Config\FileStorage;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\media\Entity\MediaType;
 
+
+/**
+ * Update allowed documents and add audio type.
+ */
+function osu_media_update_9006(&$sandbox) {
+  $config_factory = Drupal::service('config.factory');
+  /** @var Drupal\Core\Config\Config $document_file_types */
+  $document_file_types = $config_factory->getEditable('field.field.media.document.field_media_file');
+  $document_field_settings = $document_file_types->get('settings');
+  $current_file_types = explode(' ', $document_field_settings['file_extensions']);
+  $new_file_types = [
+    "txt",
+    "tex",
+    "doc",
+    "docx",
+    "pdf",
+    "ppt",
+    "pptx",
+    "xls",
+    "xlsx",
+    "odt",
+    "odp",
+    "ods",
+  ];
+  $current_file_types = array_unique(array_merge($current_file_types, $new_file_types), SORT_REGULAR);
+  $document_field_settings['file_extensions'] = implode(' ', $current_file_types);
+  $document_file_types->set('settings', $document_field_settings);
+  $document_file_types->save();
+
+  if (is_null(MediaType::load('audio'))) {
+    /** @var \Drupal\Core\Config\CachedStorage $config_storage */
+    $config_storage = Drupal::service('config.storage');
+
+    $install_path = Drupal::service('module_handler')
+      ->getModule('osu_media')
+      ->getPath();
+    $config_path = realpath($install_path . '/config/install');
+    $source = new FileStorage($config_path);
+    MediaType::create($source->read('media.type.audio'))->save();
+    FieldConfig::create($source->read('field.field.media.audio.field_media_file'))
+      ->save();
+    $config_storage->write('core.entity_form_display.media.audio.default', $source->read('core.entity_form_display.media.audio.default'));
+    $config_storage->write('core.entity_form_display.media.audio.media_library', $source->read('core.entity_form_display.media.audio.media_library'));
+    $config_storage->write('core.entity_view_display.media.audio.default', $source->read('core.entity_view_display.media.audio.default'));
+    $config_storage->write('core.entity_view_display.media.audio.media_library', $source->read('core.entity_view_display.media.audio.media_library'));
+  }
+
+  return t('Updated document type and possibly installed Audio media type');
+}
 
 /**
  * Add new Media View modes.
@@ -12,7 +63,7 @@ function osu_media_update_9005(&$sandbox) {
   $config_source = new FileStorage($osu_media_module_config_path);
 
   /** @var \Drupal\Core\Config\StorageInterface $config_storage */
-  $config_storage = \Drupal::service('config.storage');
+  $config_storage = Drupal::service('config.storage');
 
   $config_storage->write('core.entity_view_mode.media.osu_orange_bottom', $config_source->read('core.entity_view_mode.media.osu_orange_bottom'));
   $config_storage->write('core.entity_view_display.media.image.osu_orange_bottom', $config_source->read('core.entity_view_display.media.image.osu_orange_bottom'));
@@ -22,7 +73,7 @@ function osu_media_update_9005(&$sandbox) {
  * Add image styles for Meta-tag Facebook and Twitter cards.
  */
 function osu_media_update_9004(&$sandbox) {
-  $osu_media_module_path = \Drupal::service('module_handler')
+  $osu_media_module_path = Drupal::service('module_handler')
     ->getModule('osu_media')
     ->getPath();
   $config_path = realpath($osu_media_module_path . '/config/install');
@@ -41,7 +92,7 @@ function osu_media_update_9004(&$sandbox) {
  * Add xl image style.
  */
 function osu_media_update_9003(&$sandbox) {
-  $osu_media_module_path = \Drupal::service('module_handler')
+  $osu_media_module_path = Drupal::service('module_handler')
     ->getModule('osu_media')
     ->getPath();
   $config_path = realpath($osu_media_module_path . '/config/install');
@@ -56,13 +107,13 @@ function osu_media_update_9003(&$sandbox) {
  */
 function osu_media_update_9002(&$sandbox) {
   /** @var string $osu_media_module_path */
-  $osu_media_module_path = \Drupal::service('module_handler')
+  $osu_media_module_path = Drupal::service('module_handler')
     ->getModule('osu_media')
     ->getPath();
   $config_path = realpath($osu_media_module_path . '/config/install');
   $config_source = new FileStorage($config_path);
   /** @var \Drupal\Core\Config\StorageInterface $config_storage */
-  $config_storage = \Drupal::service('config.storage');
+  $config_storage = Drupal::service('config.storage');
   $config_storage->write('core.entity_view_mode.media.400x375', $config_source->read('core.entity_view_mode.media.400x375'));
   $config_storage->write('core.entity_view_mode.media.1400x900', $config_source->read('core.entity_view_mode.media.1400x900'));
 }
@@ -72,7 +123,7 @@ function osu_media_update_9002(&$sandbox) {
  */
 function osu_media_update_9001(&$sandbox) {
   /** @var string $osu_media_module_path */
-  $osu_media_module_path = \Drupal::service('module_handler')
+  $osu_media_module_path = Drupal::service('module_handler')
     ->getModule('osu_media')
     ->getPath();
   $config_path = realpath($osu_media_module_path . '/config/install');
@@ -85,7 +136,7 @@ function osu_media_update_9001(&$sandbox) {
     ImageStyle::create($config_source->read(('image.style.1400x900')))->save();
   }
   /** @var \Drupal\Core\Config\StorageInterface $config_storage */
-  $config_storage = \Drupal::service('config.storage');
+  $config_storage = Drupal::service('config.storage');
   // Create new View modes for media.
   $config_storage->write('core.entity_view_display.media.image.400x375', $config_source->read('core.entity_view_display.media.image.400x375'));
   $config_storage->write('core.entity_view_display.media.image.1400x900', $config_source->read('core.entity_view_display.media.image.1400x900'));
@@ -99,7 +150,7 @@ function osu_media_update_9001(&$sandbox) {
  */
 function osu_media_get_install_location() {
   /** @var string $osu_media_module_path */
-  $osu_media_module_path = \Drupal::service('module_handler')
+  $osu_media_module_path = Drupal::service('module_handler')
     ->getModule('osu_media')
     ->getPath();
   return realpath($osu_media_module_path . '/config/install');
