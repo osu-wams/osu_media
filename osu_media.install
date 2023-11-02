@@ -1,10 +1,14 @@
 <?php
 
+/**
+ * @file
+ * Drupal module install file.
+ */
+
 use Drupal\Core\Config\FileStorage;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\Entity\MediaType;
-
 
 /**
  * Update allowed documents and add audio type.
