@@ -11,6 +11,93 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\media\Entity\MediaType;
 
 /**
+ * Import new image styles.
+ */
+function osu_media_update_9001(&$sandbox) {
+  /** @var string $osu_media_module_path */
+  $osu_media_module_path = Drupal::service('module_handler')
+    ->getModule('osu_media')
+    ->getPath();
+  $config_path = realpath($osu_media_module_path . '/config/install');
+  $config_source = new FileStorage($config_path);
+  // Create new image styles.
+  if (is_null(ImageStyle::load('400x375'))) {
+    ImageStyle::create($config_source->read(('image.style.400x375')))->save();
+  }
+  if (is_null(ImageStyle::load('1400x900'))) {
+    ImageStyle::create($config_source->read(('image.style.1400x900')))->save();
+  }
+  /** @var \Drupal\Core\Config\StorageInterface $config_storage */
+  $config_storage = Drupal::service('config.storage');
+  // Create new View modes for media.
+  $config_storage->write('core.entity_view_display.media.image.400x375', $config_source->read('core.entity_view_display.media.image.400x375'));
+  $config_storage->write('core.entity_view_display.media.image.1400x900', $config_source->read('core.entity_view_display.media.image.1400x900'));
+}
+
+/**
+ * Import missing view modes.
+ */
+function osu_media_update_9002(&$sandbox) {
+  /** @var string $osu_media_module_path */
+  $osu_media_module_path = Drupal::service('module_handler')
+    ->getModule('osu_media')
+    ->getPath();
+  $config_path = realpath($osu_media_module_path . '/config/install');
+  $config_source = new FileStorage($config_path);
+  /** @var \Drupal\Core\Config\StorageInterface $config_storage */
+  $config_storage = Drupal::service('config.storage');
+  $config_storage->write('core.entity_view_mode.media.400x375', $config_source->read('core.entity_view_mode.media.400x375'));
+  $config_storage->write('core.entity_view_mode.media.1400x900', $config_source->read('core.entity_view_mode.media.1400x900'));
+}
+
+/**
+ * Add xl image style.
+ */
+function osu_media_update_9003(&$sandbox) {
+  $osu_media_module_path = Drupal::service('module_handler')
+    ->getModule('osu_media')
+    ->getPath();
+  $config_path = realpath($osu_media_module_path . '/config/install');
+  $config_source = new FileStorage($config_path);
+  if (is_null(ImageStyle::load('x_large'))) {
+    ImageStyle::create($config_source->read(('image.style.x_large')))->save();
+  }
+}
+
+/**
+ * Add image styles for Meta-tag Facebook and Twitter cards.
+ */
+function osu_media_update_9004(&$sandbox) {
+  $osu_media_module_path = Drupal::service('module_handler')
+    ->getModule('osu_media')
+    ->getPath();
+  $config_path = realpath($osu_media_module_path . '/config/install');
+  $config_source = new FileStorage($config_path);
+  if (is_null(ImageStyle::load('facebook_1200x'))) {
+    ImageStyle::create($config_source->read(('image.style.facebook_1200x')))
+      ->save();
+  }
+  if (is_null(ImageStyle::load('twitter_300x157'))) {
+    ImageStyle::create($config_source->read(('image.style.twitter_300x157')))
+      ->save();
+  }
+}
+
+/**
+ * Add new Media View modes.
+ */
+function osu_media_update_9005(&$sandbox) {
+  $osu_media_module_config_path = osu_media_get_install_location();
+  $config_source = new FileStorage($osu_media_module_config_path);
+
+  /** @var \Drupal\Core\Config\StorageInterface $config_storage */
+  $config_storage = Drupal::service('config.storage');
+
+  $config_storage->write('core.entity_view_mode.media.osu_orange_bottom', $config_source->read('core.entity_view_mode.media.osu_orange_bottom'));
+  $config_storage->write('core.entity_view_display.media.image.osu_orange_bottom', $config_source->read('core.entity_view_display.media.image.osu_orange_bottom'));
+}
+
+/**
  * Update allowed documents and add audio type.
  */
 function osu_media_update_9006(&$sandbox) {
@@ -60,90 +147,15 @@ function osu_media_update_9006(&$sandbox) {
 }
 
 /**
- * Add new Media View modes.
+ * Update 'max_filesize' setting to '10 MB' for Media Image Field.
  */
-function osu_media_update_9005(&$sandbox) {
-  $osu_media_module_config_path = osu_media_get_install_location();
-  $config_source = new FileStorage($osu_media_module_config_path);
-
-  /** @var \Drupal\Core\Config\StorageInterface $config_storage */
-  $config_storage = Drupal::service('config.storage');
-
-  $config_storage->write('core.entity_view_mode.media.osu_orange_bottom', $config_source->read('core.entity_view_mode.media.osu_orange_bottom'));
-  $config_storage->write('core.entity_view_display.media.image.osu_orange_bottom', $config_source->read('core.entity_view_display.media.image.osu_orange_bottom'));
-}
-
-/**
- * Add image styles for Meta-tag Facebook and Twitter cards.
- */
-function osu_media_update_9004(&$sandbox) {
-  $osu_media_module_path = Drupal::service('module_handler')
-    ->getModule('osu_media')
-    ->getPath();
-  $config_path = realpath($osu_media_module_path . '/config/install');
-  $config_source = new FileStorage($config_path);
-  if (is_null(ImageStyle::load('facebook_1200x'))) {
-    ImageStyle::create($config_source->read(('image.style.facebook_1200x')))
-      ->save();
-  }
-  if (is_null(ImageStyle::load('twitter_300x157'))) {
-    ImageStyle::create($config_source->read(('image.style.twitter_300x157')))
-      ->save();
-  }
-}
-
-/**
- * Add xl image style.
- */
-function osu_media_update_9003(&$sandbox) {
-  $osu_media_module_path = Drupal::service('module_handler')
-    ->getModule('osu_media')
-    ->getPath();
-  $config_path = realpath($osu_media_module_path . '/config/install');
-  $config_source = new FileStorage($config_path);
-  if (is_null(ImageStyle::load('x_large'))) {
-    ImageStyle::create($config_source->read(('image.style.x_large')))->save();
-  }
-}
-
-/**
- * Import missing view modes.
- */
-function osu_media_update_9002(&$sandbox) {
-  /** @var string $osu_media_module_path */
-  $osu_media_module_path = Drupal::service('module_handler')
-    ->getModule('osu_media')
-    ->getPath();
-  $config_path = realpath($osu_media_module_path . '/config/install');
-  $config_source = new FileStorage($config_path);
-  /** @var \Drupal\Core\Config\StorageInterface $config_storage */
-  $config_storage = Drupal::service('config.storage');
-  $config_storage->write('core.entity_view_mode.media.400x375', $config_source->read('core.entity_view_mode.media.400x375'));
-  $config_storage->write('core.entity_view_mode.media.1400x900', $config_source->read('core.entity_view_mode.media.1400x900'));
-}
-
-/**
- * Import new image styles.
- */
-function osu_media_update_9001(&$sandbox) {
-  /** @var string $osu_media_module_path */
-  $osu_media_module_path = Drupal::service('module_handler')
-    ->getModule('osu_media')
-    ->getPath();
-  $config_path = realpath($osu_media_module_path . '/config/install');
-  $config_source = new FileStorage($config_path);
-  // Create new image styles.
-  if (is_null(ImageStyle::load('400x375'))) {
-    ImageStyle::create($config_source->read(('image.style.400x375')))->save();
-  }
-  if (is_null(ImageStyle::load('1400x900'))) {
-    ImageStyle::create($config_source->read(('image.style.1400x900')))->save();
-  }
-  /** @var \Drupal\Core\Config\StorageInterface $config_storage */
-  $config_storage = Drupal::service('config.storage');
-  // Create new View modes for media.
-  $config_storage->write('core.entity_view_display.media.image.400x375', $config_source->read('core.entity_view_display.media.image.400x375'));
-  $config_storage->write('core.entity_view_display.media.image.1400x900', $config_source->read('core.entity_view_display.media.image.1400x900'));
+function osu_media_update_10000(&$sandbox) {
+  $config = \Drupal::configFactory()
+    ->getEditable('field.field.media.image.field_media_image');
+  $settings = $config->get('settings');
+  $settings['max_filesize'] = '10 MB';
+  $config->set('settings', $settings);
+  $config->save();
 }
 
 /**
