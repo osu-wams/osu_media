@@ -159,6 +159,30 @@ function osu_media_update_10000(&$sandbox) {
 }
 
 /**
+ * Change the image effect of x_large from scale and crop to just scale.
+ */
+function osu_media_update_10001(&$sandbox) {
+  $image_style = ImageStyle::load('x_large');
+  $effects = $image_style->getEffects();
+  foreach ($effects as $effect) {
+    if ($effect->getUuid() === '3b296c73-195a-40eb-9502-c26f6415fa40') {
+      $image_style->deleteImageEffect($effect);
+    }
+  }
+  $new_effect = [
+    'id' => 'image_scale',
+    'data' => [
+      'width' => 600,
+      'height' => 600,
+      'upscale' => FALSE,
+    ],
+    'weight' => 1,
+  ];
+  $image_style->addImageEffect($new_effect);
+  $image_style->save();
+}
+
+/**
  * Get the configuration path for this module.
  *
  * @return false|string
