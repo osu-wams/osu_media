@@ -1,9 +1,7 @@
-uuid: e1b8b7f1-84ca-4864-9b9d-7e7466de95e3
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.media.image.field_media_caption
     - field.field.media.image.field_media_image
     - image.style.thumbnail
     - media.type.image
@@ -17,13 +15,13 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 4
+    weight: 10
     region: content
     settings: { }
     third_party_settings: { }
   field_media_caption:
     type: string_textfield
-    weight: 2
+    weight: 1
     region: content
     settings:
       size: 60
@@ -31,7 +29,7 @@ content:
     third_party_settings: { }
   field_media_image:
     type: image_image
-    weight: 1
+    weight: 0
     region: content
     settings:
       progress_indicator: throbber
@@ -39,7 +37,7 @@ content:
     third_party_settings: { }
   name:
     type: string_textfield
-    weight: 0
+    weight: -5
     region: content
     settings:
       size: 60
@@ -47,20 +45,25 @@ content:
     third_party_settings: { }
   path:
     type: path
-    weight: 5
+    weight: 30
+    region: content
+    settings: { }
+    third_party_settings: { }
+  replace_file:
+    weight: 2
     region: content
     settings: { }
     third_party_settings: { }
   status:
     type: boolean_checkbox
-    weight: 6
+    weight: 100
     region: content
     settings:
       display_label: true
     third_party_settings: { }
   uid:
     type: entity_reference_autocomplete
-    weight: 3
+    weight: 5
     region: content
     settings:
       match_operator: CONTAINS

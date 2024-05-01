@@ -182,6 +182,37 @@ function osu_media_update_10002(&$sandbox) {
 }
 
 /**
+ * Add Media Entity File Replace module and update form display.
+ */
+function osu_media_update_10003(&$sandbox) {
+  $replace_media_forms = [
+    'media.audio.default',
+    'media.document.default',
+    'media.image.default',
+    'media.local_video.default',
+  ];
+  \Drupal::service('module_installer')->install([
+    'media_entity_file_replace',
+  ], TRUE);
+
+  /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $form_display */
+  $form_display = \Drupal::entityTypeManager()
+    ->getStorage('entity_form_display');
+
+  foreach ($replace_media_forms as $replace_media_form) {
+    $media_entity_form_default = $form_display->load($replace_media_form);
+    $media_entity_form_default->setComponent('replace_file', [
+      'region' => 'content',
+      'weight' => 5,
+      'settings' => [],
+      'third_party_settings' => [],
+    ]);
+    $media_entity_form_default->save();
+  }
+  return t('Updated media entity form display default');
+}
+
+/**
  * Get the configuration path for this module.
  *
  * @return false|string
