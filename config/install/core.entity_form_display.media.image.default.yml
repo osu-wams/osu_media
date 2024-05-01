@@ -1,9 +1,7 @@
-uuid: e1b8b7f1-84ca-4864-9b9d-7e7466de95e3
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.media.image.field_media_caption
     - field.field.media.image.field_media_image
     - image.style.thumbnail
     - media.type.image
@@ -20,14 +18,6 @@ content:
     weight: 4
     region: content
     settings: { }
-    third_party_settings: { }
-  field_media_caption:
-    type: string_textfield
-    weight: 2
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
     third_party_settings: { }
   field_media_image:
     type: image_image
@@ -48,6 +38,11 @@ content:
   path:
     type: path
     weight: 5
+    region: content
+    settings: { }
+    third_party_settings: { }
+  replace_file:
+    weight: 2
     region: content
     settings: { }
     third_party_settings: { }

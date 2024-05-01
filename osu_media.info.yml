@@ -9,3 +9,4 @@ dependencies:
   - dropzonejs:dropzonejs
   - media_bulk_upload:media_bulk_upload
   - media_bulk_upload:media_bulk_upload_dropzonejs
+  - media_entity_file_replace:media_entity_file_replace
