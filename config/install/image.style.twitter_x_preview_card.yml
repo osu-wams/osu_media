@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: { }
+name: twitter_x_preview_card
+label: 'Twitter/X Preview Card'
+effects:
+  0a137e4e-95bb-4799-8c39-2a537dbfbece:
+    uuid: 0a137e4e-95bb-4799-8c39-2a537dbfbece
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 1024
+      height: 512
+      anchor: center-center

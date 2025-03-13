@@ -239,6 +239,26 @@ function osu_media_update_10004(&$sandbox) {
 }
 
 /**
+ * Add new image styles for Metatags.
+ */
+function osu_media_update_10005(&$sandbox) {
+  $styles_id = [
+    'open_graph_image_preview',
+    'twitter_x_preview_card',
+  ];
+  $config_path = osu_media_get_install_location();
+  $config_source = new FileStorage($config_path);
+  foreach ($styles_id as $style_id) {
+    $style = ImageStyle::load($style_id);
+    if (!$style) {
+      ImageStyle::create($config_source->read('image.style.x_large_scale_crop'))
+        ->save();
+    }
+  }
+  return t('Image styles Open Graph Image Preview and Twitter/X Preview Card created');
+}
+
+/**
  * Get the configuration path for this module.
  *
  * @return false|string

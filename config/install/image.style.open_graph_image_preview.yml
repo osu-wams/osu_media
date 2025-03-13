@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: { }
+name: open_graph_image_preview
+label: 'Open Graph Image Preview'
+effects:
+  68ae9613-02d2-42ab-be4c-c3c3db43e42e:
+    uuid: 68ae9613-02d2-42ab-be4c-c3c3db43e42e
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 1200
+      height: 630
+      anchor: center-center
