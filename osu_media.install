@@ -251,7 +251,7 @@ function osu_media_update_10005(&$sandbox) {
   foreach ($styles_id as $style_id) {
     $style = ImageStyle::load($style_id);
     if (!$style) {
-      ImageStyle::create($config_source->read('image.style.x_large_scale_crop'))
+      ImageStyle::create($config_source->read("image.style.$style_id"))
         ->save();
     }
   }
