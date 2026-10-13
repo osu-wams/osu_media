@@ -5,6 +5,11 @@
  * Primary module hooks for OSU Media module.
  */
 
+declare(strict_types=1);
+
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
 use Drupal\osu_media\Entity\Bundle\MediaImage;
 
 /**
@@ -23,4 +28,24 @@ function osu_media_entity_bundle_info_alter(array &$bundles): void {
   if (isset($bundles['media']['image'])) {
     $bundles['media']['image']['class'] = MediaImage::class;
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ *
+ * Uplifted from https://www.drupal.org/project/drupal/issues/3096845#comment-15077229
+ */
+function osu_media_media_delete(Media $media_entity) {
+  $temporary_max_age = \Drupal::config('system.file')->get('temporary_max_age');
+  $source_value = $media_entity->getSource()->getSourceFieldValue($media_entity);
+  if (!$source_value) {
+    return;
+  }
+  $file_entity = File::load($source_value);
+
+  $seconds = $temporary_max_age + 1;
+  $past_date = new DrupalDateTime("-$seconds seconds");
+  $file_entity->setChangedTime($past_date->getTimestamp())->save();
+
+  file_cron();
 }
